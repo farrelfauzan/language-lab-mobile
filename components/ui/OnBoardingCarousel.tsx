@@ -1,13 +1,14 @@
+import { Text } from "@/components/ui/Text";
 import { useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import {
-    Dimensions,
-    Image,
-    ImageSourcePropType,
-    Pressable,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  ImageSourcePropType,
+  Pressable,
+
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 

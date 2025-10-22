@@ -1,8 +1,9 @@
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import PrimaryTextInput from "@/components/ui/PrimaryTextInput";
+import { Text } from "@/components/ui/Text";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
@@ -63,7 +64,7 @@ export default function LoginScreen() {
           <PrimaryButton
             title="Login"
             onPress={() => {
-              router.replace("/(tabs)");
+              router.replace("/(main)/home");
             }}
             className="w-full"
             textClassName="text-lg"

@@ -1,3 +1,4 @@
+import { Text } from "@/components/ui/Text";
 import { useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import {
@@ -5,7 +6,7 @@ import {
   Image,
   ImageSourcePropType,
   Pressable,
-  Text,
+
   TouchableOpacity,
   View,
 } from "react-native";
