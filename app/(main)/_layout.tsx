@@ -2,20 +2,13 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import Header from "@/components/Header";
-import {
-  Image,
-  View
-} from "react-native";
+import { Image, View } from "react-native";
 import "../../global.css";
 
 export default function TabLayout() {
   return (
     <Tabs
-      screenLayout={({ children }) => (
-        <Header>
-          {children}
-        </Header>
-      )}
+      screenLayout={({ children }) => <Header>{children}</Header>}
       screenOptions={{
         tabBarActiveTintColor: "#22C55E",
         tabBarInactiveTintColor: "#FFFFFF",
@@ -40,6 +33,12 @@ export default function TabLayout() {
         name="home"
         options={{
           title: "Dashboard",
+          tabBarLabelStyle: {
+            fontFamily: "Geist",
+            fontSize: 12,
+            fontWeight: "500",
+            marginTop: 5,
+          },
           tabBarIcon: ({ color, size, focused }) => (
             <View className="flex-1 items-center justify-center w-full">
               {focused ? (
@@ -60,6 +59,12 @@ export default function TabLayout() {
         name="calendar"
         options={{
           title: "Calendar",
+          tabBarLabelStyle: {
+            fontFamily: "Geist",
+            fontSize: 12,
+            fontWeight: "500",
+            marginTop: 5,
+          },
           tabBarIcon: ({ color, size, focused }) => (
             <View className="flex-1 items-center justify-center w-full">
               {focused ? (
@@ -80,6 +85,12 @@ export default function TabLayout() {
         name="completion"
         options={{
           title: "Completion",
+          tabBarLabelStyle: {
+            fontFamily: "Geist",
+            fontSize: 12,
+            fontWeight: "500",
+            marginTop: 5,
+          },
           tabBarIcon: ({ color, size, focused }) => (
             <View className="flex-1 items-center justify-center w-full">
               {focused ? (
@@ -100,6 +111,12 @@ export default function TabLayout() {
         name="performance"
         options={{
           title: "Performance",
+          tabBarLabelStyle: {
+            fontFamily: "Geist",
+            fontSize: 12,
+            fontWeight: "500",
+            marginTop: 5,
+          },
           tabBarIcon: ({ color, size, focused }) => (
             <View className="flex-1 items-center justify-center w-full">
               {focused ? (

@@ -215,8 +215,8 @@ export default function Header({ children }: { children: React.ReactNode }) {
 
       {/* Scrollable Content */}
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingTop: HEADER_HEIGHT - 40}}
+        className="flex-1"
+        contentContainerStyle={{ paddingTop: HEADER_HEIGHT - 40, paddingBottom: 60 }}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false }
