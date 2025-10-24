@@ -10,9 +10,10 @@ type Leaderboard = {
 
 type LeaderboardProps = {
   data: Leaderboard[];
+  onPressSeeAll?: () => void;
 };
 
-export default function Leaderboard({ data }: LeaderboardProps) {
+export default function Leaderboard({ data, onPressSeeAll }: LeaderboardProps) {
   return (
     <View className="border-[#E5E7EB] border-solid border-[1px] rounded-lg p-5 flex-1 bg-white">
       <View className="flex-1">
@@ -32,10 +33,16 @@ export default function Leaderboard({ data }: LeaderboardProps) {
               key={item.id}
             >
               <View className="flex-row gap-3 items-center">
-                <View className={
-                    item.id === "1" ? "w-5 h-5 rounded-full bg-[#FBBF24] justify-center items-center" : "w-5 h-5 rounded-full bg-gray-300 justify-center items-center"
-                }>
-                  <Text className="text-white text-[10px] text-center">{index + 1}</Text>
+                <View
+                  className={
+                    item.id === "1"
+                      ? "w-5 h-5 rounded-full bg-[#FBBF24] justify-center items-center"
+                      : "w-5 h-5 rounded-full bg-gray-300 justify-center items-center"
+                  }
+                >
+                  <Text className="text-white text-[10px] text-center">
+                    {index + 1}
+                  </Text>
                 </View>
                 <Image
                   source={require("../assets/images/profile-1.png")}
@@ -59,7 +66,7 @@ export default function Leaderboard({ data }: LeaderboardProps) {
             </View>
             <Text className="text-blue-500 font-bold text-[20px]">72</Text>
           </View>
-          <TouchableOpacity className="flex-row items-center justify-center gap-2">
+          <TouchableOpacity className="flex-row items-center justify-center gap-2" onPress={onPressSeeAll}>
             <Text className="text-center text-green-500 text-[14px] font-medium mt-2">
               See All Rankings
             </Text>

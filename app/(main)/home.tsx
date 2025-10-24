@@ -1,11 +1,14 @@
 import ActivityCard from "@/components/ActivityCard";
 import AnalyticsCard from "@/components/AnalyticsCard";
 import Leaderbaord from "@/components/Leaderbaord";
+import { LeaderboardDialog } from "@/components/LeaderboardDialog";
 import PerformanceReport from "@/components/PerformanceReport";
 import UpcomingSchedule from "@/components/UpcomingSchedule";
+import { useState } from "react";
 import { View } from "react-native";
 
 export default function HomeScreen() {
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
   const scheduleDate = [
     {
@@ -28,8 +31,8 @@ export default function HomeScreen() {
       day: 20,
       title: "Writing Skills Workshop",
       time: "1:00 PM - 2:30 PM",
-    }
-  ]
+    },
+  ];
 
   const leaderboard = [
     { id: "1", name: "Alice Johnson", score: 95 },
@@ -37,7 +40,7 @@ export default function HomeScreen() {
     { id: "3", name: "Charlie Brown", score: 88 },
     { id: "4", name: "Diana Prince", score: 85 },
     { id: "5", name: "Ethan Hunt", score: 80 },
-  ]
+  ];
 
   return (
     <View className="flex-1 justify-start items-center gap-4">
@@ -81,11 +84,16 @@ export default function HomeScreen() {
         />
       </View>
       <View className="w-full">
-        <UpcomingSchedule data={scheduleDate}/>
+        <UpcomingSchedule data={scheduleDate} />
       </View>
       <View className="w-full">
-        <Leaderbaord 
+        <Leaderbaord
           data={leaderboard}
+          onPressSeeAll={() => setIsLeaderboardOpen(true)}
+        />
+        <LeaderboardDialog
+          isOpen={isLeaderboardOpen}
+          onClose={() => setIsLeaderboardOpen(false)  }
         />
       </View>
     </View>
