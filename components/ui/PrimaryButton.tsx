@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { twMerge } from "tailwind-merge";
+import { Text } from "./Text";
 
 const buttonVariants = cva(
   "flex items-center justify-center rounded-lg font-medium transition-colors",

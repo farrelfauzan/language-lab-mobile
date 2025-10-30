@@ -3,12 +3,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { cva, type VariantProps } from "class-variance-authority";
 import { useState } from "react";
 import {
-    Text,
-    TextInput,
-    TextInputProps,
-    TouchableOpacity,
-    View,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { Text } from "./Text";
 
 const textInputVariants = cva(
   "border border-neutral-200 rounded-lg py-3 pl-2 b14-regular text-neutral-900 text-[14px] bg-white",

@@ -1,3 +1,4 @@
+import { Text } from "@/components/ui/Text";
 import { useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import {
@@ -5,7 +6,7 @@ import {
   Image,
   ImageSourcePropType,
   Pressable,
-  Text,
+
   TouchableOpacity,
   View,
 } from "react-native";
@@ -62,7 +63,7 @@ export default function OnBoardingCarousel({
         <View className="flex-1 bg-white">
           <Image
             source={item.image}
-            className="w-full h-[500px]"
+            className="w-full h-[40%]"
             resizeMode="cover"
           />
           <View className="px-4 py-12">

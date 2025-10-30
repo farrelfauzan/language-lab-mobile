@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  }
+  
+  /* Default font for all elements */
+  * {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Default text styles for React Native components */
+  .text-xs { font-family: 'Geist'; }
+  .text-sm { font-family: 'Geist'; }
+  .text-base { font-family: 'Geist'; }
+  .text-lg { font-family: 'Geist'; }
+  .text-xl { font-family: 'Geist'; }
+  .text-2xl { font-family: 'Geist'; }
+  .text-3xl { font-family: 'Geist'; }
+  .text-4xl { font-family: 'Geist'; }
+  .text-5xl { font-family: 'Geist'; }
+  .text-6xl { font-family: 'Geist'; }
+  .text-7xl { font-family: 'Geist'; }
+  .text-8xl { font-family: 'Geist'; }
+  .text-9xl { font-family: 'Geist'; }
+}

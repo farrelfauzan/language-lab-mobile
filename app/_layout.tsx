@@ -11,32 +11,28 @@ import "react-native-reanimated";
 import "../global.css";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  useEffect(() => {
-    async function loadFonts() {
-      await Font.loadAsync({
-        Inter: require("../assets/fonts/Geist-VariableFont_wght.ttf"),
-      });
-      setFontsLoaded(true);
-    }
-    loadFonts();
-  }, []);
+  const [fontsLoaded] = Font.useFonts({
+    Geist: require("../assets/fonts/Geist-Regular.ttf"),
+    "Geist-Variable": require("../assets/fonts/Geist-VariableFont_wght.ttf"),
+  });
 
   if (!fontsLoaded) {
-    return <View />;
+    return (
+      <View className="flex-1 items-center justify-center bg-black">
+        <ActivityIndicator color="#fff" />
+      </View>
+    );
   }
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="light" />
+      <StatusBar style="light"/>
       <PortalHost />
     </ThemeProvider>
   );
