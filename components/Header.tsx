@@ -1,4 +1,5 @@
 import { Text } from "@/components/ui/Text";
+import { RootState } from "@/store/store";
 import { Picker } from "@react-native-picker/picker";
 import { usePathname } from "expo-router";
 import { useRef, useState } from "react";
@@ -11,10 +12,14 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+
 
 export default function Header({ children }: { children: React.ReactNode }) {
+  const user = useSelector((state: RootState) => state.auth.user)
+  console.log("User in Header: ", JSON.stringify(user, null, 2));
   const scrollY = useRef(new Animated.Value(0)).current;
-  const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
+  const { height: SCREEN_HEIGHT } =
     Dimensions.get("window");
 
   // Responsive dimensions
@@ -142,7 +147,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                     className="font-bold text-white tracking-wider"
                     style={{ fontSize: nameTextSize }}
                   >
-                    Sarah Chen
+                    {user?.profile.name}
                   </Text>
                 </Animated.View>
               </View>

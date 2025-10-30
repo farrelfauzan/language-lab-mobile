@@ -1,20 +1,29 @@
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import PrimaryTextInput from "@/components/ui/PrimaryTextInput";
 import { Text } from "@/components/ui/Text";
+import { setAuthState } from "@/libs/reducers/auth-slice";
+import { saveAccessToken } from "@/libs/secure-stoorage";
+import { useLogin } from "@/query/auth";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Dimensions, Image, ScrollView, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  ToastAndroid,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 
 export default function LoginScreen() {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
-    Dimensions.get("window");
+  const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
   // Responsive calculations
   const isSmallScreen = SCREEN_HEIGHT < 700;
   const isMediumScreen = SCREEN_HEIGHT >= 700 && SCREEN_HEIGHT < 900;
-  const isLargeScreen = SCREEN_HEIGHT >= 900;
 
   const getResponsiveValue = (small: number, medium: number, large: number) => {
     if (isSmallScreen) return small;
@@ -26,13 +35,41 @@ export default function LoginScreen() {
   const logoWidth = getResponsiveValue(180, 224, 260);
   const logoHeight = getResponsiveValue(36, 45, 52);
   const horizontalPadding = getResponsiveValue(16, 20, 24);
-  const cardWidth = getResponsiveValue(95, 90, 85); // percentage
-  const cardPadding = getResponsiveValue(20, 24, 32);
 
-  const [login, setLogin] = useState({
+  const { mutateAsync: login } = useLogin();
+
+  const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+
+  async function handleLogin() {
+    try {
+      const response = await login({
+        emailOrUsername: loginData.email,
+        password: loginData.password,
+      });
+
+      if (response.user.role.name === "student") {
+        await saveAccessToken(response.token);
+        dispatch(
+          setAuthState({
+            isAuthenticated: true,
+            userId: response.user.id,
+            user: response.user,
+          })
+        );
+        router.replace("/(main)/home");
+      } else {
+        ToastAndroid.show(
+          `${response.user.role.name.charAt(0).toUpperCase() + response.user.role.name.slice(1)}  portal still in progress, please use student account to login.`,
+          ToastAndroid.LONG
+        );
+      }
+    } catch (error: any) {
+      console.error("Login failed:", error);
+    }
+  }
 
   return (
     <SafeAreaView className="flex-1 items-center justify-start bg-transparent">
@@ -86,8 +123,10 @@ export default function LoginScreen() {
             <View className="mt-5">
               <PrimaryTextInput
                 label="Email Address"
-                value={login.email}
-                onChangeText={(text) => setLogin({ ...login, email: text })}
+                value={loginData.email}
+                onChangeText={(text) =>
+                  setLoginData({ ...loginData, email: text })
+                }
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 maxLength={100}
@@ -96,8 +135,10 @@ export default function LoginScreen() {
               />
               <PrimaryTextInput
                 label="Password"
-                value={login.password}
-                onChangeText={(text) => setLogin({ ...login, password: text })}
+                value={loginData.password}
+                onChangeText={(text) =>
+                  setLoginData({ ...loginData, password: text })
+                }
                 placeholder="Enter your password"
                 isPassword
                 maxLength={50}
@@ -110,7 +151,7 @@ export default function LoginScreen() {
               <PrimaryButton
                 title="Login"
                 onPress={() => {
-                  router.replace("/(main)/home");
+                  handleLogin();
                 }}
                 className="w-full"
                 textClassName="text-lg"
