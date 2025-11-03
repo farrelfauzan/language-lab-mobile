@@ -11,7 +11,11 @@ import "react-native-reanimated";
 import "../global.css";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { TanstackProvider } from "@/provider/tanstack-provider";
+import { persistor, store } from "@/store/store";
 import { ActivityIndicator, View } from "react-native";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -30,10 +34,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="light"/>
-      <PortalHost />
-    </ThemeProvider>
+    <TanstackProvider>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={null}>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <Stack screenOptions={{ headerShown: false }} />
+            <StatusBar style="light" />
+            <PortalHost />
+          </ThemeProvider>
+        </PersistGate>
+      </Provider>
+    </TanstackProvider>
   );
 }

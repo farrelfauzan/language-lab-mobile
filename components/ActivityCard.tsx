@@ -1,7 +1,13 @@
 import { Image, View } from "react-native";
 import { Text } from "./ui";
 
-export default function ActivityCard() {
+
+type ActivityCardProps = {
+  totalActivities?: number;
+  completedActivities?: number;
+}
+
+export default function ActivityCard({ totalActivities, completedActivities }: ActivityCardProps) {
   return (
     <View className="border-[#E5E7EB] border-solid border-[1px] shadow-sm w-full h-fit rounded-lg flex-row justify-between items-center p-5 bg-white">
       <View className="flex-col">
@@ -19,13 +25,17 @@ export default function ActivityCard() {
         <View className="flex-row mt-4 justify-between w-full">
           <Text className="text-[#1F242E] text-[14px] leading-3">My Progress</Text>
           <Text className="text-[#737B8C] font-semibold text-right">
-            45/52 activities completed
+            {completedActivities}/{totalActivities} activities completed
           </Text>
         </View>
         <View className="w-full bg-gray-200 rounded-full h-2 mt-3">
           <View 
             className="bg-green-500 h-2 rounded-full" 
-            style={{ width: `${(45/52) * 100}%` }}
+            style={{ 
+              width: totalActivities && totalActivities > 0
+                ? `${((completedActivities ?? 0) / totalActivities) * 100}%`
+                : 0
+            }}
           />
         </View>
       </View>
