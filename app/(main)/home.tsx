@@ -27,21 +27,21 @@ export default function HomeScreen() {
     { id: "5", name: "Ethan Hunt", score: 80 },
   ];
 
+  const classId = params.classId ? parseInt(params.classId) : undefined;
+
   const {
     data: studentOverview,
     refetch: refetchStudentOverview,
     isLoading: loadingStudentOverview,
   } = useGetstudentOverview({
-    studentId: user?.id || undefined,
-    classId: parseInt(params.classId) || 1,
+    studentId: user?.id,
+    classId: classId,
   });
 
-  const {
-    data: upcomingNotification,
-    refetch: refetchUpcomingNotification,
-  } = useGetUpcomingNotification({
-    classId: parseInt(params.classId)
-  })
+  const { data: upcomingNotification, refetch: refetchUpcomingNotification } =
+    useGetUpcomingNotification({
+      classId: classId,
+    });
 
   useEffect(() => {
     refetchStudentOverview();
@@ -51,18 +51,18 @@ export default function HomeScreen() {
   if (loadingStudentOverview) {
     return (
       <View className="flex-1 justify-start items-center gap-4 bg-white">
-          <View className="w-[350px] h-[120px] rounded-2xl mt-4" />
-          <View className="flex-row w-[350px] mt-6 justify-between">
-            <View className="w-[160px] h-20 rounded-xl" />
-            <View className="w-[160px] h-20 rounded-xl" />
-          </View>
-          <View className="flex-row w-[350px] mt-4 justify-between">
-            <View className="w-[160px] h-20 rounded-xl" />
-            <View className="w-[160px] h-20 rounded-xl" />
-          </View>
-          <View className="w-[350px] h-[180px] rounded-2xl mt-6" />
-          <View className="w-[350px] h-[120px] rounded-2xl mt-6" />
-          <View className="w-[350px] h-[220px] rounded-2xl mt-6" />
+        <View className="w-[350px] h-[120px] rounded-2xl mt-4" />
+        <View className="flex-row w-[350px] mt-6 justify-between">
+          <View className="w-[160px] h-20 rounded-xl" />
+          <View className="w-[160px] h-20 rounded-xl" />
+        </View>
+        <View className="flex-row w-[350px] mt-4 justify-between">
+          <View className="w-[160px] h-20 rounded-xl" />
+          <View className="w-[160px] h-20 rounded-xl" />
+        </View>
+        <View className="w-[350px] h-[180px] rounded-2xl mt-6" />
+        <View className="w-[350px] h-[120px] rounded-2xl mt-6" />
+        <View className="w-[350px] h-[220px] rounded-2xl mt-6" />
       </View>
     );
   }
@@ -80,7 +80,11 @@ export default function HomeScreen() {
         <View className="flex-row w-full gap-4">
           <AnalyticsCard
             title="Overall Score"
-            value={(((studentOverview?.averageScore || 0) * 10).toFixed(1)).toString() || "0"}
+            value={
+              ((studentOverview?.averageScore || 0) * 10)
+                .toFixed(1)
+                .toString() || "0"
+            }
             iconSource={require("../../assets/images/icons/line-chart.png")}
           />
           <AnalyticsCard
@@ -111,31 +115,56 @@ export default function HomeScreen() {
         </View>
       </View>
       <View className="w-full">
-        <PerformanceReport
-          readingScore={
-            (studentOverview?.typeResults.find((item) => item.type === "reading")?.result?.averageScore !== undefined
-              ? studentOverview.typeResults.find((item) => item.type === "reading")!.result!.averageScore * 100
-              : 0)
-          }
-          speakingScore={
-            (studentOverview?.typeResults.find((item) => item.type === "speaking")?.result?.averageScore !== undefined
-              ? studentOverview.typeResults.find((item) => item.type === "speaking")!.result!.averageScore * 100
-              : 0)
-          }
-          listeningScore={
-            (studentOverview?.typeResults.find((item) => item.type === "listening")?.result?.averageScore !== undefined
-              ? studentOverview.typeResults.find((item) => item.type === "listening")!.result!.averageScore * 100
-              : 0)
-          }
-          writingScore={
-            (studentOverview?.typeResults.find((item) => item.type === "writing")?.result?.averageScore !== undefined
-              ? studentOverview.typeResults.find((item) => item.type === "writing")!.result!.averageScore * 100
-              : 0)
-          }
-        />
+        {(() => {
+          const reading = studentOverview?.typeResults.find(
+            (item) => item.type === "reading"
+          );
+          const speaking = studentOverview?.typeResults.find(
+            (item) => item.type === "speaking"
+          );
+          const listening = studentOverview?.typeResults.find(
+            (item) => item.type === "listening"
+          );
+          const writing = studentOverview?.typeResults.find(
+            (item) => item.type === "writing"
+          );
+          return (
+            <PerformanceReport
+              readingScore={
+                reading?.result?.averageScore !== undefined
+                  ? reading.result.averageScore * 100
+                  : 0
+              }
+              speakingScore={
+                speaking?.result?.averageScore !== undefined
+                  ? speaking.result.averageScore * 100
+                  : 0
+              }
+              listeningScore={
+                listening?.result?.averageScore !== undefined
+                  ? listening.result.averageScore * 100
+                  : 0
+              }
+              writingScore={
+                writing?.result?.averageScore !== undefined
+                  ? writing.result.averageScore * 100
+                  : 0
+              }
+            />
+          );
+        })()}
       </View>
       <View className="w-full">
-        <UpcomingSchedule data={upcomingNotification?.data ?? { exams: [], assignments: [], schedules: [], events: [] }} />
+        <UpcomingSchedule
+          data={
+            upcomingNotification?.data ?? {
+              exams: [],
+              assignments: [],
+              schedules: [],
+              events: [],
+            }
+          }
+        />
       </View>
       <View className="w-full">
         <Leaderbaord

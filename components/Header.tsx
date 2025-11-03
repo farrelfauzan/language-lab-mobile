@@ -43,8 +43,6 @@ export default function Header({ children }: { children: React.ReactNode }) {
 
   const {
     data: classes,
-    isLoading,
-    error,
   } = useGetClasses({
     userId: user?.id || undefined,
   });
@@ -313,7 +311,6 @@ export default function Header({ children }: { children: React.ReactNode }) {
 
       {/* Scrollable Content */}
       <ScrollView
-        // className="flex-1"
         contentContainerStyle={{
           paddingTop:
             pathName === "/home"

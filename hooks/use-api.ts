@@ -2,7 +2,6 @@ import {
   useMutation,
   UseMutationOptions,
   useQuery,
-  useQueryClient,
   UseQueryOptions,
 } from "@tanstack/react-query";
 
@@ -24,8 +23,6 @@ export const useApiMutation = <TData, TVariables>(
   mutationFn: (variables: TVariables) => Promise<TData>,
   options?: Omit<UseMutationOptions<TData, unknown, TVariables>, "mutationFn">
 ) => {
-  const queryClient = useQueryClient();
-
   return useMutation<TData, unknown, TVariables>({
     mutationFn,
     ...options,

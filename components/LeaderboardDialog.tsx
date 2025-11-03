@@ -121,8 +121,7 @@ export const LeaderboardDialog = ({
                     {data[0]?.student.name}
                   </Text>
                   <Text className="text-[26px] text-[#22C55E] font-bold text-center mb-7">
-                    {(Number(Number(data[0]?.overallScore).toFixed(1)) || 0) *
-                      10}
+                    {((Number(data[0]?.overallScore) || 0) * 10).toFixed(1)}
                   </Text>
                   <Image
                     source={require("../assets/images/rank-1.png")}
@@ -205,7 +204,7 @@ export const LeaderboardDialog = ({
                 </View>
               </View>
               <Text className="text-[20px] font-semibold text-blue-500 pr-2">
-                {(Number(Number(overallScore).toFixed(1)) || 0) * 10}
+                {((Number(overallScore) || 0) * 10).toFixed(1)}
               </Text>
             </View>
           )}

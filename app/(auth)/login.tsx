@@ -2,7 +2,7 @@ import PrimaryButton from "@/components/ui/PrimaryButton";
 import PrimaryTextInput from "@/components/ui/PrimaryTextInput";
 import { Text } from "@/components/ui/Text";
 import { setAuthState } from "@/libs/reducers/auth-slice";
-import { saveAccessToken } from "@/libs/secure-stoorage";
+import { saveAccessToken } from "@/libs/secure-storage";
 import { useLogin } from "@/query/auth";
 import { LoginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +36,6 @@ export default function LoginScreen() {
   const { mutateAsync: login } = useLogin();
 
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },

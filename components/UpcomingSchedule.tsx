@@ -21,25 +21,6 @@ export default function UpcomingSchedule({
           <Text className="font-semibold">Upcoming Schedule</Text>
         </View>
         <View className="mt-4">
-          {/* {data.map((item) => (
-            <View
-              key={`${item.month}-${item.day}`}
-              className="border-none bg-[#F3F5F780] rounded-lg p-4 flex-row justify-between items-center mb-3"
-            >
-              <View className="flex-col">
-                <Text className="font-medium text-[10px]">{item.month}</Text>
-                <Text className="font-bold text-[12px] mt-1 text-center">
-                  {item.day}
-                </Text>
-              </View>
-              <View className="flex-col flex-1 mx-4">
-                <Text className="font-medium text-[14px]">{item.title}</Text>
-                <Text className="text-[#737B8C] text-[14px] mt-1">
-                  {item.time}
-                </Text>
-              </View>
-            </View>
-          ))} */}
           {data.exams &&
             data.exams.length > 0 &&
             data.exams.map(

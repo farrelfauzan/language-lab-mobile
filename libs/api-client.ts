@@ -5,9 +5,8 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { router } from "expo-router";
-import { ToastAndroid } from "react-native";
 import { config } from "./config";
-import { getAccessToken } from "./secure-stoorage";
+import { getAccessToken } from "./secure-storage";
 
 // 🔧 Create a typed Axios instance interface that returns data directly
 export interface TypedAxiosInstance extends AxiosInstance {
@@ -53,11 +52,11 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response.data,
   async (error: AxiosError<any>) => {
-    ToastAndroid.show(
-      String(error.response?.data).charAt(0).toUpperCase() +
-        String(error.response?.data).slice(1),
-      ToastAndroid.LONG
-    );
+    // ToastAndroid.show(
+    //   String(error.response?.data).charAt(0).toUpperCase() +
+    //     String(error.response?.data).slice(1),
+    //   ToastAndroid.LONG
+    // );
     if (error.response?.status === 401) {
       router.replace("/(auth)/login");
     }
