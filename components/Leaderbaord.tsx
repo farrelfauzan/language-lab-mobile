@@ -1,19 +1,21 @@
+import { StudentOverview } from "@/types/student-overview";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image, TouchableOpacity, View } from "react-native";
 import { Text } from "./ui";
 
-type Leaderboard = {
-  id: string;
-  name: string;
-  score: number;
-};
-
 type LeaderboardProps = {
-  data: Leaderboard[];
+  data: StudentOverview["leaderboard"];
+  userRank: number;
+  overallScore?: number;
   onPressSeeAll?: () => void;
 };
 
-export default function Leaderboard({ data, onPressSeeAll }: LeaderboardProps) {
+export default function Leaderboard({
+  data,
+  userRank,
+  overallScore,
+  onPressSeeAll,
+}: LeaderboardProps) {
   return (
     <View className="border-[#E5E7EB] border-solid border-[1px] rounded-lg p-5 flex-1 bg-white">
       <View className="flex-1">
@@ -30,12 +32,12 @@ export default function Leaderboard({ data, onPressSeeAll }: LeaderboardProps) {
           {data.map((item, index) => (
             <View
               className="flex-row justify-between items-center mb-3"
-              key={item.id}
+              key={index}
             >
               <View className="flex-row gap-3 items-center">
                 <View
                   className={
-                    item.id === "1"
+                    index === 0
                       ? "w-5 h-5 rounded-full bg-[#FBBF24] justify-center items-center"
                       : "w-5 h-5 rounded-full bg-gray-300 justify-center items-center"
                   }
@@ -44,39 +46,58 @@ export default function Leaderboard({ data, onPressSeeAll }: LeaderboardProps) {
                     {index + 1}
                   </Text>
                 </View>
-                <Image
-                  source={require("../assets/images/profile-1.png")}
-                  className="w-8 h-8 rounded-full"
-                />
+                {item.student.picture !== null ? (
+                  <Image
+                    source={{
+                      uri: `${process.env.EXPO_PUBLIC_MINIO_URL}/${item.student.picture}`,
+                    }}
+                    className="w-8 h-8 rounded-full"
+                  />
+                ) : (
+                  <View className="w-9 h-9 rounded-full bg-gray-300 items-center justify-center">
+                    <Text className="text-gray-600 text-lg">
+                      {item.student.name.charAt(0).toUpperCase()}
+                    </Text>
+                  </View>
+                )}
                 <Text className="font-medium text-[14px] text-center">
-                  {item.name}
+                  {item.student.name}
                 </Text>
               </View>
               <Text className="text-neutral-900 font-bold text-[20px]">
-                {item.score}
+                {(Number(Number(item.overallScore).toFixed(1)) || 0) * 10}
               </Text>
             </View>
           ))}
-          <View className="flex-row justify-between items-center mb-3 bg-[#EFF6FF] p-2 rounded-lg">
-            <View className="flex-row gap-3 items-center">
-              <View className="w-7 h-7 rounded-full bg-blue-500 justify-center items-center">
-                <Text className="text-white text-center">12</Text>
+          {userRank > 3 && (
+            <View className="flex-row justify-between items-center mb-3 bg-[#EFF6FF] p-2 rounded-lg">
+              <View className="flex-row gap-3 items-center">
+                <View className="w-7 h-7 rounded-full bg-blue-500 justify-center items-center">
+                  <Text className="text-white text-center">{userRank}</Text>
+                </View>
+                <Text className="font-medium text-[14px] text-center">You</Text>
               </View>
-              <Text className="font-medium text-[14px] text-center">You</Text>
+              <Text className="text-blue-500 font-bold text-[20px]">
+                {(Number(Number(overallScore || 0).toFixed(1)) || 0) * 10}
+              </Text>
             </View>
-            <Text className="text-blue-500 font-bold text-[20px]">72</Text>
-          </View>
-          <TouchableOpacity className="flex-row items-center justify-center gap-2" onPress={onPressSeeAll}>
-            <Text className="text-center text-green-500 text-[14px] font-medium mt-2">
-              See All Rankings
-            </Text>
-            <MaterialIcons
-              name="arrow-forward"
-              size={14}
-              color="#22c55e"
-              style={{ marginTop: 8 }}
-            />
-          </TouchableOpacity>
+          )}
+          {data.length > 3 && (
+            <TouchableOpacity
+              className="flex-row items-center justify-center gap-2"
+              onPress={onPressSeeAll}
+            >
+              <Text className="text-center text-green-500 text-[14px] font-medium mt-2">
+                See All Rankings
+              </Text>
+              <MaterialIcons
+                name="arrow-forward"
+                size={14}
+                color="#22c55e"
+                style={{ marginTop: 8 }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>

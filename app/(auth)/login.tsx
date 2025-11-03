@@ -4,17 +4,14 @@ import { Text } from "@/components/ui/Text";
 import { setAuthState } from "@/libs/reducers/auth-slice";
 import { saveAccessToken } from "@/libs/secure-stoorage";
 import { useLogin } from "@/query/auth";
+import { LoginSchema } from "@/schema/login";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import {
-  Dimensions,
-  Image,
-  ScrollView,
-  ToastAndroid,
-  View,
-} from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { Dimensions, Image, ScrollView, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
+import z from "zod";
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -38,16 +35,24 @@ export default function LoginScreen() {
 
   const { mutateAsync: login } = useLogin();
 
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      emailOrUsername: "",
+      password: "",
+    },
   });
 
-  async function handleLogin() {
+  async function handleLogin(data: z.infer<typeof LoginSchema>) {
     try {
       const response = await login({
-        emailOrUsername: loginData.email,
-        password: loginData.password,
+        emailOrUsername: data.emailOrUsername,
+        password: data.password,
       });
 
       if (response.user.role.name === "student") {
@@ -121,38 +126,57 @@ export default function LoginScreen() {
             </View>
 
             <View className="mt-5">
-              <PrimaryTextInput
-                label="Email Address"
-                value={loginData.email}
-                onChangeText={(text) =>
-                  setLoginData({ ...loginData, email: text })
-                }
-                placeholder="Enter your email"
-                keyboardType="email-address"
-                maxLength={100}
-                errorText=""
-                onPressSufix={() => {}}
+              <View className="mb-4">
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <PrimaryTextInput
+                      label="Email or Username"
+                      value={value}
+                      onChangeText={(text) => {
+                          onChange(text);
+                      }}
+                      placeholder="Enter your email or username"
+                      maxLength={50}
+                      errorText=""
+                      onPressSufix={() => {}}
+                    />
+                  )}
+                  name="emailOrUsername"
+                />
+                {errors.emailOrUsername && (
+                  <Text className="text-red-500 mt-1">
+                    {errors.emailOrUsername.message}
+                  </Text>
+                )}
+              </View>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <PrimaryTextInput
+                    label="Password"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholder="Enter your password"
+                    isPassword
+                    maxLength={50}
+                    errorText=""
+                    onPressSufix={() => {}}
+                  />
+                )}
+                name="password"
               />
-              <PrimaryTextInput
-                label="Password"
-                value={loginData.password}
-                onChangeText={(text) =>
-                  setLoginData({ ...loginData, password: text })
-                }
-                placeholder="Enter your password"
-                isPassword
-                maxLength={50}
-                errorText=""
-                onPressSufix={() => {}}
-              />
+              {errors.password && (
+                <Text className="text-red-500 mt-1">
+                  {errors.password.message}
+                </Text>
+              )}
             </View>
 
             <View className="items-center mt-5">
               <PrimaryButton
                 title="Login"
-                onPress={() => {
-                  handleLogin();
-                }}
+                onPress={handleSubmit(handleLogin)}
                 className="w-full"
                 textClassName="text-lg"
               />

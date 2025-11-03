@@ -1,46 +1,30 @@
+import { StudentOverview } from "@/types/student-overview";
 import { Crown } from "lucide-react-native";
-import React from "react";
 import {
-    Image,
-    ImageBackground,
-    Modal,
-    ScrollView,
-    TouchableOpacity,
-    View,
+  Image,
+  ImageBackground,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { Text } from "./ui";
 
 interface IModalProps {
   isOpen: boolean;
+  data: StudentOverview["leaderboard"];
+  userRank: number;
+  overallScore: number;
   onClose: () => void;
 }
 
-export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
-  const topThree = [
-    {
-      id: 2,
-      name: "Marcus Johnson",
-      score: 94,
-      rankImg: require("../assets/images/rank-2.png"),
-      position: "left",
-    },
-    {
-      id: 1,
-      name: "Sarah Chen",
-      score: 96,
-      rankImg: require("../assets/images/rank-1.png"),
-      crown: true,
-      position: "center",
-    },
-    {
-      id: 3,
-      name: "Emma Rodriguez",
-      score: 92,
-      rankImg: require("../assets/images/rank-3.png"),
-      position: "right",
-    },
-  ];
-
+export const LeaderboardDialog = ({
+  data,
+  isOpen,
+  onClose,
+  userRank,
+  overallScore,
+}: IModalProps) => {
   return (
     <Modal
       visible={isOpen}
@@ -49,7 +33,7 @@ export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
       onRequestClose={onClose}
     >
       <View className="absolute inset-0 bg-black/80 justify-center items-center">
-        <TouchableOpacity 
+        <TouchableOpacity
           className="absolute inset-0"
           activeOpacity={1}
           onPress={onClose}
@@ -80,19 +64,29 @@ export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
             >
               <View className="flex-row items-end justify-center w-full px-4">
                 <View className="w-[100px] items-center justify-end">
-                  <Image
-                    source={{ uri: "https://github.com/shadcn.png" }}
-                    className="w-12 h-12 rounded-full mb-2"
-                    alt="Marcus"
-                  />
+                  {data[1] && data[1]?.student.picture !== null ? (
+                    <Image
+                      source={{
+                        uri: `${process.env.EXPO_PUBLIC_MINIO_URL}/${data[1]?.student.picture}`,
+                      }}
+                      className="w-12 h-12 rounded-full mb-2"
+                      alt="Marcus"
+                    />
+                  ) : (
+                    <View className="w-9 h-9 rounded-full bg-gray-300 items-center justify-center">
+                      <Text className="text-gray-600 text-lg">
+                        {data[1]?.student.name.charAt(0).toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
                   <Text
                     className="text-[16px] font-medium text-center text-white mb-2"
                     numberOfLines={2}
                   >
-                    Marcus Johnson
+                    {data[1]?.student.name}
                   </Text>
                   <Text className="text-[26px] text-[#22C55E] font-bold text-center mb-2">
-                    94
+                    {(Number(data[1]?.overallScore) || 0) * 10}
                   </Text>
                   <Image
                     source={require("../assets/images/rank-2.png")}
@@ -107,17 +101,28 @@ export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
                 >
                   <View className="flex-col items-center gap-2">
                     <Crown color="#EAB308" className="w-5 h-5" />
-                    <Image
-                      source={{ uri: "https://github.com/shadcn.png" }}
-                      className="w-12 h-12 rounded-full mb-2"
-                      alt="Sarah"
-                    />
+                    {data[0]?.student.picture !== null ? (
+                      <Image
+                        source={{
+                          uri: `${process.env.EXPO_PUBLIC_MINIO_URL}/${data[0]?.student.picture}`,
+                        }}
+                        className="w-12 h-12 rounded-full mb-2"
+                        alt="Rank 1"
+                      />
+                    ) : (
+                      <View className="w-9 h-9 rounded-full bg-gray-300 items-center justify-center">
+                        <Text className="text-gray-600 text-lg">
+                          {data[0]?.student.name.charAt(0).toUpperCase()}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                   <Text className="text-[16px] font-medium text-center text-white mb-2">
-                    Sarah Chen
+                    {data[0]?.student.name}
                   </Text>
                   <Text className="text-[26px] text-[#22C55E] font-bold text-center mb-7">
-                    96
+                    {(Number(Number(data[0]?.overallScore).toFixed(1)) || 0) *
+                      10}
                   </Text>
                   <Image
                     source={require("../assets/images/rank-1.png")}
@@ -127,22 +132,32 @@ export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
                   />
                 </View>
                 <View
-                  className="w-[100px] items-center justify-end"
+                  className="w-[100px] items-center justify-end ml-2"
                   style={{ zIndex: 1 }}
                 >
-                  <Image
-                    source={{ uri: "https://github.com/shadcn.png" }}
-                    className="w-12 h-12 rounded-full mb-2"
-                    alt="Emma"
-                  />
+                  {data[2] && data[2]?.student.picture !== null ? (
+                    <Image
+                      source={{
+                        uri: `${process.env.EXPO_PUBLIC_MINIO_URL}/${data[2]?.student.picture}`,
+                      }}
+                      className="w-12 h-12 rounded-full mb-2"
+                      alt="Rank 3"
+                    />
+                  ) : (
+                    <View className="w-9 h-9 rounded-full bg-gray-300 items-center justify-center">
+                      <Text className="text-gray-600 text-lg">
+                        {data[2]?.student.name.charAt(0).toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
                   <Text
                     className="text-[16px] font-medium text-center text-white mb-2"
                     numberOfLines={2}
                   >
-                    Emma Rodriguez
+                    {data[2]?.student.name}
                   </Text>
                   <Text className="text-[26px] text-[#22C55E] font-bold text-center mb-2">
-                    92
+                    {(Number(data[2]?.overallScore) || 0) * 10}
                   </Text>
                   <Image
                     source={require("../assets/images/rank-3.png")}
@@ -164,65 +179,36 @@ export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
               }}
               showsVerticalScrollIndicator={false}
             >
-              <LeaderBoardItem
-                rank={4}
-                name="James Kim"
-                course="Intermediate English 1"
-                score={89}
-              />
-              <LeaderBoardItem
-                rank={5}
-                name="Alex Thompson"
-                course="Advanced Spanish"
-                score={87}
-              />
-              <LeaderBoardItem
-                rank={6}
-                name="Maria Garcia"
-                course="Basic French"
-                score={85}
-              />
-              <LeaderBoardItem
-                rank={7}
-                name="John Smith"
-                course="Intermediate German"
-                score={83}
-              />
-              <LeaderBoardItem
-                rank={8}
-                name="Lisa Wang"
-                course="Intermediate German"
-                score={81}
-              />
-              <LeaderBoardItem
-                rank={9}
-                name="David Brown"
-                course="Basic Italian"
-                score={79}
-              />
-              <LeaderBoardItem
-                rank={10}
-                name="Sophie Miller"
-                course="Advanced French"
-                score={77}
-              />
+              {data.slice(3).map((student, index) => (
+                <LeaderBoardItem
+                  key={student.student.id}
+                  rank={index + 4}
+                  name={student.student.name}
+                  score={(Number(student.overallScore) || 0) * 10}
+                  picture={student.student.picture}
+                />
+              ))}
             </ScrollView>
           </View>
-          <View className="flex-row items-center justify-between py-1 px-1 mb-4 bg-[#EFF6FF] mx-4 rounded-lg">
-            <View className="flex-row items-center gap-3">
-              <View className="bg-blue-500 rounded-full p-3">
-                <Text className=" text-[12px] text-white font-semibold">20</Text>
+          {userRank > 3 && (
+            <View className="flex-row items-center justify-between py-1 px-1 mb-4 bg-[#EFF6FF] mx-4 rounded-lg">
+              <View className="flex-row items-center gap-3">
+                <View className="bg-blue-500 rounded-full p-3">
+                  <Text className=" text-[12px] text-white font-semibold">
+                    {userRank}
+                  </Text>
+                </View>
+                <View>
+                  <Text className="text-[13px] font-medium text-[#111827]">
+                    You
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text className="text-[13px] font-medium text-[#111827]">
-                  You
-                </Text>
-              </View>
+              <Text className="text-[20px] font-semibold text-blue-500 pr-2">
+                {(Number(Number(overallScore).toFixed(1)) || 0) * 10}
+              </Text>
             </View>
-            <Text className="text-[20px] font-semibold text-blue-500 pr-2">
-              87
-            </Text>
-          </View>
+          )}
         </View>
       </View>
     </Modal>
@@ -232,22 +218,30 @@ export const LeaderboardDialog = ({ isOpen, onClose }: IModalProps) => {
 const LeaderBoardItem = ({
   rank,
   name,
-  course,
   score,
+  picture,
 }: {
   rank: number;
   name: string;
-  course: string;
   score: number;
+  picture: string;
 }) => {
   return (
     <View className="flex-row items-center justify-between py-2">
       <View className="flex-row items-center gap-3">
         <Text className="text-[#6B7280] text-[14px]">#{rank}</Text>
-        <Image
-          className="w-9 h-9 rounded-full"
-          source={{ uri: "https://github.com/shadcn.png" }}
-        />
+        {picture !== null ? (
+          <Image
+            className="w-9 h-9 rounded-full"
+            source={{ uri: `${process.env.EXPO_PUBLIC_MINIO_URL}/${picture}` }}
+          />
+        ) : (
+          <View className="w-9 h-9 rounded-full bg-gray-300 items-center justify-center">
+            <Text className="text-gray-600 text-lg">
+              {name.charAt(0).toUpperCase()}
+            </Text>
+          </View>
+        )}
         <View>
           <Text className="text-[13px] font-medium text-[#111827]">{name}</Text>
         </View>

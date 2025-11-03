@@ -1,8 +1,10 @@
 import { Text } from "@/components/ui/Text";
+import { useGetClasses } from "@/query/class";
 import { RootState } from "@/store/store";
+import { Class } from "@/types/class";
 import { Picker } from "@react-native-picker/picker";
-import { usePathname } from "expo-router";
-import { useRef, useState } from "react";
+import { router, usePathname } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -14,13 +16,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
-
 export default function Header({ children }: { children: React.ReactNode }) {
-  const user = useSelector((state: RootState) => state.auth.user)
-  console.log("User in Header: ", JSON.stringify(user, null, 2));
+  const user = useSelector((state: RootState) => state.auth.user);
   const scrollY = useRef(new Animated.Value(0)).current;
-  const { height: SCREEN_HEIGHT } =
-    Dimensions.get("window");
+  const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
   // Responsive dimensions
   const HEADER_HEIGHT = SCREEN_HEIGHT * 0.32; // 32% of screen height
@@ -40,10 +39,26 @@ export default function Header({ children }: { children: React.ReactNode }) {
   const subtitleTextSize = getResponsiveValue(12, 14, 16);
   const pickerHeight = getResponsiveValue(36, 40, 44);
 
-  const [selectedClass, setSelectedClass] = useState<string>("classA");
-
   const pathName = usePathname();
-  console.log("Current Pathname: ", pathName);
+
+  const {
+    data: classes,
+    isLoading,
+    error,
+  } = useGetClasses({
+    userId: user?.id || undefined,
+  });
+
+  const [selectedClass, setSelectedClass] = useState<number>(
+    classes?.data[0]?.id || 0
+  );
+
+  useEffect(() => {
+    if (classes && classes.data.length > 0) {
+      setSelectedClass(classes.data[0].id);
+      router.setParams({ classId: classes.data[0].id.toString() });
+    }
+  }, [classes]);
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
@@ -216,7 +231,10 @@ export default function Header({ children }: { children: React.ReactNode }) {
                   >
                     <Picker
                       selectedValue={selectedClass}
-                      onValueChange={(itemValue) => setSelectedClass(itemValue)}
+                      onValueChange={(itemValue) => {
+                        setSelectedClass(itemValue);
+                        router.setParams({ classId: itemValue.toString() });
+                      }}
                       dropdownIconColor="#898989"
                       dropdownIconRippleColor="#e5e5e5"
                       style={{
@@ -225,9 +243,13 @@ export default function Header({ children }: { children: React.ReactNode }) {
                         fontSize: getResponsiveValue(14, 16, 18),
                       }}
                     >
-                      <Picker.Item label="Class A" value="classA" />
-                      <Picker.Item label="Class B" value="classB" />
-                      <Picker.Item label="Class C" value="classC" />
+                      {classes?.data.map((cls: Class) => (
+                        <Picker.Item
+                          key={cls.id}
+                          label={cls.name}
+                          value={cls.id}
+                        />
+                      ))}
                     </Picker>
                   </View>
                 </View>
@@ -291,7 +313,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
 
       {/* Scrollable Content */}
       <ScrollView
-        className="flex-1"
+        // className="flex-1"
         contentContainerStyle={{
           paddingTop:
             pathName === "/home"
@@ -309,7 +331,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
         <View
           className={`bg-white`}
           style={{
-            minHeight: SCREEN_HEIGHT,
+            minHeight: SCREEN_HEIGHT + 300,
             paddingHorizontal: getResponsiveValue(16, 20, 24),
           }}
         >

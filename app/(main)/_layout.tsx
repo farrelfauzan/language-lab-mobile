@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import React from "react";
 
 import Header from "@/components/Header";
 import { Image, View } from "react-native";

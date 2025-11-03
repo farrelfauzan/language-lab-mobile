@@ -62,8 +62,8 @@ export default function PrimaryTextInput({
   const [showValue, setShowValue] = useState(!isPassword);
 
   return (
-    <View className="w-full mb-4">
-      <View className="flex-row mb-2 flex-wrap">
+    <View className="w-full">
+      <View className="flex-row flex-wrap">
         <Text className={cn(labelVariants(), labelClassName)}>
           {label}
         </Text>
